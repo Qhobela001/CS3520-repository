@@ -1,0 +1,91 @@
+.data
+	palidome: .asciiz "The two numbers are palidome\n"
+ 	notequal: .asciiz "The two numbers are not palidome\n"
+
+
+#####################this is the reverse function
+.text
+.globl main
+	main:
+	while:
+        	beq	$t0, $zero, exit	# if $t0 == 0 then exit
+        	mul     $s0, $s0, $s2       	# rev = rev * 10
+
+        	div	$t0, $s2		# $t0 / $s2
+        	mflo	$t2			# $t2 = floor($t0 / $s2),  a = a/10
+        	mfhi	$t3			# $t3 = $t0 mod $s2,  a % 10
+
+        	add     $s0, $s0, $t3       	# rev = rev + a % 10
+        	addi	$t0, $t2, 0		# $t0 = $t2 + 0     a = a/10
+
+        	j	while
+        
+    	exit:
+        	li	$v0, 1
+        	move	$a0, $s0
+        	syscall
+
+        	li	$v0, 10
+	    	syscall
+################# this the prime checker function
+		
+	prime:
+		li	$s2, 2		# c = 2
+		sub	$t4, $t5, 1	# $t4 = $t5 - 1 this is e
+		
+	start_loop:
+		sle	$t6, $s2, $t4
+		beqz	$t6, exit
+		
+		#### code block #####
+		
+		div	$t5, $t2	#t5 / $t2
+		mflo	$t4		## $t4 = floort0 / $t2
+		mfhi	$t7		## $t7 = 5 mod $t2
+	
+	
+		addi	$s2, $s2, 1	# $s2 = $s2 + 1
+		b	start_loop
+		
+		li	$v0, 10
+		syscall
+		
+		
+########### This is the perfect square function ################
+
+		li	$t8, 0
+		addi	$t9, $s3, 0
+		li	$s4, 2
+		
+	while_2:	
+		beq	$t8, 7, exit
+		div	$t9, $s3
+		mflo	$s5
+		addi	$s3, $s5, 0
+		j	while
+		
+		li $v0, 10
+		syscall
+		
+##########Palindrome checker#################
+	beq	$t0, $zero, exit
+	move	$t1, $a0
+	
+	#li	$t0, 
+	
+	bne	$t0, $t1, notpaly	# if $t0 != $t1 then target
+	
+	li	$v0, 4
+	####la	$t0, palindrome
+	
+	notpaly:
+		li	$v0, 4
+		la	$t0, notequal
+		
+		li	$v0, 10
+		syscall
+
+
+########### main function implementation from the c source code #################
+		
+		
